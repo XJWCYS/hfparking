@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cys.hfparking.dao.NoticeMapper">
+  <resultMap id="BaseResultMap" type="com.cys.hfparking.entity.Notice">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="nid" jdbcType="INTEGER" property="nid" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <select id="count" resultMap="BaseResultMap">
+    SELECT
+    nid,
+    title,
+    author,
+    content,
+    release_time,
+    status
+    FROM notice
+    WHERE status=1
+  </select>
+  <select id="selectNewNotice" resultMap="BaseResultMap">
+    SELECT
+    nid,
+    title,
+    author,
+    content,
+    release_time,
+    status
+    FROM notice
+    WHERE status=1
+    ORDER BY release_time
+    DESC LIMIT 0,3;
+  </select>
+  <select id="findAllNotice" resultMap="BaseResultMap">
+    SELECT
+    nid,
+    title,
+    author,
+    content,
+    release_time,
+    status
+    FROM notice
+    WHERE status=1
+    ORDER BY release_time desc
+    limit #{start},#{limit}
+  </select>
+  <select id="selectByKwNotice" resultMap="BaseResultMap">
+    SELECT
+    nid,
+    title,
+    author,
+    content,
+    release_time,
+    status
+    FROM notice
+    <where>
+       and status=1
+      <if test="author!=''and author!=null and author!='%%'">
+        and author like #{author}
+      </if>
+      <if test="content!=''and content!=null and content!='%%'">
+        and content like #{content}
+      </if>
+    </where>
+    ORDER BY release_time desc
+    limit #{start},#{limit}
+  </select>
+</mapper>

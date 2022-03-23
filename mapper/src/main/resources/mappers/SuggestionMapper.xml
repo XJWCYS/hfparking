@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cys.hfparking.dao.SuggestionMapper">
+  <resultMap id="BaseResultMap" type="com.cys.hfparking.entity.Suggestion">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="suggest_content" jdbcType="VARCHAR" property="suggestContent" />
+    <result column="suggest_time" jdbcType="TIMESTAMP" property="suggestTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="suggestion_level" jdbcType="VARCHAR" property="suggestionLevel" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="is_anonymous" jdbcType="INTEGER" property="isAnonymous" />
+  </resultMap>
+  <resultMap id="BaseResultMapVO" type="com.cys.hfparking.entity.SuggestionVO">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="suggest_content" jdbcType="VARCHAR" property="suggestContent" />
+    <result column="suggest_time" jdbcType="TIMESTAMP" property="suggestTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="suggestion_level" jdbcType="VARCHAR" property="suggestionLevel" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="is_anonymous" jdbcType="INTEGER" property="isAnonymous" />
+    <collection column="sid" property="suggestions" select="com.cys.hfparking.dao.SuggestionMapper.findSuggestionReplyByParentId"/>
+    <collection column="uid" property="users" select="com.cys.hfparking.dao.UserMapper.findUserById"/>
+  </resultMap>
+  <resultMap id="ReplyVO" type="com.cys.hfparking.entity.SuggestionVO">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="suggest_content" jdbcType="VARCHAR" property="suggestContent" />
+    <result column="suggest_time" jdbcType="TIMESTAMP" property="suggestTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="suggestion_level" jdbcType="VARCHAR" property="suggestionLevel" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="is_anonymous" jdbcType="INTEGER" property="isAnonymous" />
+    <collection column="parent_id" property="suggestions" select="com.cys.hfparking.dao.SuggestionMapper.findSuggestionByParentId"/>
+    <collection column="uid" property="users" select="com.cys.hfparking.dao.UserMapper.findUserById"/>
+  </resultMap>
+
+  <select id="findSuggestionReplyByParentId" resultMap="BaseResultMapVO">
+    select
+    sid,
+    suggest_content,
+    suggest_time,
+    status,
+    parent_id,
+    suggestion_level,
+    uid,
+    is_anonymous
+    from
+    suggestion
+    where parent_id=#{sid}
+    ORDER BY suggest_time desc
+  </select>
+  <select id="findAllSuggestion" resultMap="BaseResultMapVO">
+    select
+    sid,
+    suggest_content,
+    suggest_time,
+    status,
+    parent_id,
+    suggestion_level,
+    uid,
+    is_anonymous
+    from
+    suggestion
+    where suggestion_level = 1
+    ORDER BY suggest_time desc
+    limit #{start},#{limit}
+  </select>
+  <select id="findSuggestionByUid" resultMap="BaseResultMapVO">
+    select
+    sid,
+    suggest_content,
+    suggest_time,
+    status,
+    parent_id,
+    suggestion_level,
+    uid,
+    is_anonymous
+    from
+    suggestion
+    where uid = #{uid}
+    and suggestion_level =1
+    ORDER BY suggest_time desc
+  </select>
+  <select id="findSuggestionNoReply" resultMap="BaseResultMapVO">
+    select
+    sid,
+    suggest_content,
+    suggest_time,
+    status,
+    parent_id,
+    suggestion_level,
+    uid,
+    is_anonymous
+    from
+    suggestion
+    where status = 0
+    and suggestion_level =1
+    ORDER BY suggest_time desc
+    limit #{start},#{limit}
+  </select>
+  <select id="findSuggestionReplyByUid" resultMap="ReplyVO">
+    select
+    sid,
+    suggest_content,
+    suggest_time,
+    status,
+    parent_id,
+    suggestion_level,
+    uid,
+    is_anonymous
+    from
+    suggestion
+    where uid = #{uid}
+    and suggestion_level =2
+    ORDER BY suggest_time desc
+    limit #{start},#{limit}
+  </select>
+  <select id="findSuggestionByParentId" resultMap="ReplyVO">
+    select
+    sid,
+    suggest_content,
+    suggest_time,
+    status,
+    parent_id,
+    suggestion_level,
+    uid,
+    is_anonymous
+    from
+    suggestion
+    where sid=#{parentId}
+    ORDER BY suggest_time desc
+  </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cys.hfparking.dao.ParkingMapper">
+  <resultMap id="BaseResultMap" type="com.cys.hfparking.entity.Parking">
+    <id column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="parking_category" jdbcType="INTEGER" property="parkingCategory" />
+    <result column="parking_region" jdbcType="VARCHAR" property="parkingRegion" />
+    <result column="parking_stop" jdbcType="INTEGER" property="parkingStop" />
+  </resultMap>
+    <select id="findAll" resultMap="BaseResultMap">
+   select
+   pid,
+   parking_category,
+   parking_region,
+   parking_stop
+   from parking
+   order by parking_region
+   limit #{start},#{limit}
+  </select>
+  <select id="findFree" resultMap="BaseResultMap">
+   select
+   pid,
+   parking_category,
+   parking_region,
+   parking_stop
+   from parking
+   where parking_stop = '1'
+   order by parking_region
+   limit #{start},#{limit}
+  </select>
+</mapper>

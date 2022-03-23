@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cys.hfparking.dao.UserLoginHistoryMapper">
+  <resultMap id="BaseResultMap" type="com.cys.hfparking.entity.UserLoginHistory">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+  </resultMap>
+  <resultMap id="BaseResultMapVO" type="com.cys.hfparking.entity.UserLoginHistoryVO">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+    <collection column="uid" property="users" select="com.cys.hfparking.dao.UserMapper.findUserById"/>
+  </resultMap>
+  <select id="findAllUserLoginHistory" resultMap="BaseResultMapVO">
+    select
+    id,
+    uid,
+    ip,
+    login_time
+    from user_login_history
+    ORDER BY login_time desc
+    limit #{start},#{limit}
+  </select>
+</mapper>

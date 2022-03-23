@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cys.hfparking.dao.CarMapper">
+  <resultMap id="BaseResultMap" type="com.cys.hfparking.entity.Car">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="cid" jdbcType="INTEGER" property="cid" />
+    <result column="car_num" jdbcType="VARCHAR" property="carNum" />
+    <result column="car_category" jdbcType="INTEGER" property="carCategory" />
+    <result column="car_model" jdbcType="VARCHAR" property="carModel" />
+    <result column="car_color" jdbcType="VARCHAR" property="carColor" />
+    <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+  </resultMap>
+  <select id="findAllCar" resultMap="BaseResultMap">
+    select
+    cid,
+    car_num,
+    car_category,
+    car_model,
+    car_color,
+    owner_name,
+    phone
+    from car
+    limit #{start},#{limit}
+  </select>
+  <select id="findByKwCar" resultMap="BaseResultMap">
+    select
+    cid,
+    car_num,
+    car_category,
+    car_model,
+    car_color,
+    owner_name,
+    phone
+    from car
+    <where>
+      <if test="ownerName!=''and ownerName!=null and ownerName!='%%'">
+        and owner_name like #{ownerName}
+      </if>
+      <if test="carNum!=''and carNum!=null and carNum!='%%'">
+        and car_num like #{carNum}
+      </if>
+    </where>
+    limit #{start},#{limit}
+  </select>
+  <delete id="delSel">
+    delete from car where cid in
+    <foreach collection="cids" item="cid" open="(" close=")" separator=",">
+      #{cid}
+    </foreach>
+  </delete>
+  <insert id="addExcelCars">
+    insert into car(
+    car_num,
+    car_category,
+    car_model,
+    car_color,
+    owner_name,
+    phone
+    )
+    values
+    <foreach collection="cars" item="item" index= "index" separator =",">
+      (
+      #{item.carNum},
+      #{item.carCategory},
+      #{item.carModel},
+      #{item.carColor},
+      #{item.ownerName},
+      #{item.phone}
+      )
+    </foreach>
+  </insert>
+
+
+
+</mapper>

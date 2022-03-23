@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cys.hfparking.dao.OwnersMapper">
+  <resultMap id="BaseResultMap" type="com.cys.hfparking.entity.Owners">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="oid" jdbcType="INTEGER" property="oid" />
+    <result column="oname" jdbcType="VARCHAR" property="oname" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="house_holder" jdbcType="VARCHAR" property="houseHolder" />
+  </resultMap>
+
+  <select id="selectAllOwner" resultMap="BaseResultMap">
+    select
+    oid,
+    oname,
+    sex,
+    tel,
+    address,
+    house_holder
+    from
+    owners
+    limit #{start},#{limit}
+  </select>
+
+  <select id="selectByKwOwner" resultMap="BaseResultMap">
+    select
+    oid,
+    oname,
+    sex,
+    tel,
+    address,
+    house_holder
+    from
+    owners
+    <where>
+      <if test="oname!=''and oname!=null and oname!='%%'">
+       and oname like #{oname}
+      </if>
+      <if test="address!=''and address!=null and address!='%%'">
+       and address like #{address}
+      </if>
+    </where>
+    limit #{start},#{limit}
+  </select>
+
+  <delete id="delSel">
+    delete from owners where oid in
+    <foreach collection="oids" item="oid" open="(" close=")" separator=",">
+      #{oid}
+    </foreach>
+  </delete>
+
+  <insert id="addExcelOwners">
+    insert into owners(
+    oname,
+    sex,
+    tel,
+    address,
+    house_holder
+    )
+    values
+    <foreach collection="owners" item="item" index= "index" separator =",">
+      (
+      #{item.oname},
+      #{item.sex},
+      #{item.tel},
+      #{item.address},
+      #{item.houseHolder}
+      )
+    </foreach>
+  </insert>
+
+</mapper>

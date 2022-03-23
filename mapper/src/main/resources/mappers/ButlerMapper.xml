@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cys.hfparking.dao.ButlerMapper">
+  <resultMap id="BaseResultMap" type="com.cys.hfparking.entity.Butler">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="bid" jdbcType="INTEGER" property="bid" />
+    <result column="butler_name" jdbcType="VARCHAR" property="butlerName" />
+    <result column="butler_phone" jdbcType="VARCHAR" property="butlerPhone" />
+    <result column="butler_sex" jdbcType="VARCHAR" property="butlerSex" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <select id="selectByKwButler" resultMap="BaseResultMap">
+    select
+    bid,
+    butler_name,
+    butler_phone,
+    butler_sex,
+    status
+    from
+    butler
+    <where>
+      <if test="butlerName!=''and butlerName!=null and butlerName!='%%'">
+        and butler_name like #{butlerName}
+      </if>
+    </where>
+    limit #{start},#{limit}
+  </select>
+  <select id="findFree" resultMap="BaseResultMap">
+    select
+    bid,
+    butler_name,
+    butler_phone,
+    butler_sex,
+    status
+    from
+    butler
+    where status=1
+    limit #{start},#{limit}
+  </select>
+  <delete id="delSel">
+    delete from butler where bid in
+    <foreach collection="bids" item="bid" open="(" close=")" separator=",">
+      #{bid}
+    </foreach>
+  </delete>
+  <insert id="addExcelButler">
+    insert into butler(
+    butler_name,
+    butler_phone,
+    butler_sex,
+    status
+    )
+    values
+    <foreach collection="butlers" item="item" index= "index" separator =",">
+      (
+      #{item.butlerName},
+      #{item.butlerPhone},
+      #{item.butlerSex},
+      #{item.status}
+      )
+    </foreach>
+  </insert>
+
+</mapper>
